@@ -8,13 +8,16 @@ router.get("/hills", function(req, res, next) {
     res.send(hills);
   });*/
 
-  Hill.geoNear(
-    {
-      type: "Point",
-      coordinates: [parseFloat(req.query.lng), parseFloat(req.query.lat)]
-    },
-    { maxDistance: 100000, spherical: true }
-  )
+  Hill.aggregate()
+    .near({
+      near: {
+        type: "Point",
+        coordinates: [parseFloat(req.query.lng), parseFloat(req.query.lat)]
+      },
+      maxDistance: 100000,
+      spherical: true,
+      distanceField: "dis"
+    })
     .then(function(hills) {
       res.send(hills);
     })
